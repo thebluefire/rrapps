@@ -16,28 +16,29 @@ public class AccountService {
     private final AccountRepository repository;
 
     public Flux<Account> all() {
-        return this.repository.findAll();
+        return repository.findAll();
     }
 
     public Mono<Account> get(Long id) {
-        return this.repository.findById(id);
-    }
-
-    public Mono<Account> update(Account account) {
-        account.setLastOperationTime(LocalDateTime.now());
-        return this.repository
-                .findById(account.getId())
-                .map(p -> account)
-                .flatMap(this.repository::save);
-    }
-
-    public Mono<Account> delete(Long id) {
-        return this.repository.findById(id);
+        return repository.findById(id);
     }
 
     public Mono<Account> create(Account account) {
         account.setLastOperationTime(LocalDateTime.now());
-        return this.repository.save(account);
+        return repository.save(account);
+    }
+
+    public Mono<Account> update(Long id, Account account) {
+        account.setId(id);
+        account.setLastOperationTime(LocalDateTime.now());
+        return repository
+                .findById(account.getId())
+                .map(p -> account)
+                .flatMap(repository::save);
+    }
+
+    public Mono<Void> delete(Long id) {
+        return repository.deleteById(id);
     }
 
 }

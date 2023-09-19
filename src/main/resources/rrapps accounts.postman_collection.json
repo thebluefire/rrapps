@@ -50,7 +50,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\" : null,\r\n    \"accountNumber\" : \"12345\",\r\n    \"balance\" : \"120\",\r\n    \"currency\" : \"eur\"\r\n}",
+					"raw": "{\r\n    \"accountNumber\" : \"12345\",\r\n    \"balance\" : \"100\",\r\n    \"currency\" : \"eur\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -77,7 +77,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\" : \"1\",\r\n    \"accountNumber\" : \"12345\",\r\n    \"balance\" : \"250\",\r\n    \"currency\" : \"eur\"\r\n}",
+					"raw": "{\r\n    \"accountNumber\" : \"12345\",\r\n    \"balance\" : \"250\",\r\n    \"currency\" : \"eur\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

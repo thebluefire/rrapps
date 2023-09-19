@@ -2,7 +2,10 @@ package com.example.rrapps.controller;
 
 import com.example.rrapps.entity.Account;
 import com.example.rrapps.service.AccountService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,36 +19,39 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping(value = "/accounts", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 class AccountController {
 
     private final AccountService service;
 
-    AccountController(AccountService service) {
-        this.service = service;
-    }
-
     @GetMapping
     Flux<Account> getAll() {
-        return this.service.all();
+        return service.all();
     }
 
     @GetMapping("/{id}")
-    Mono<Account> getById(@PathVariable("id") Long id) {
-        return this.service.get(id);
+    Mono<ResponseEntity<Account>> getById(@PathVariable("id") Long id) {
+        return service.get(id)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    Mono<Account> create(@RequestBody Account account) {
-        return this.service.create(account);
-    }
-
-    @DeleteMapping("/{id}")
-    Mono<Account> deleteById(@PathVariable Long id) {
-        return this.service.delete(id);
+    Mono<ResponseEntity<Account>> create(@RequestBody Account account) {
+        return service.create(account)
+                .map(acc -> new ResponseEntity<>(acc, HttpStatus.CREATED));
     }
 
     @PutMapping("/{id}")
-    Mono<Account> updateById(@PathVariable String id, @RequestBody Account account) {
-        return this.service.update(account);
+    Mono<ResponseEntity<Account>> updateById(@PathVariable Long id, @RequestBody Account account) {
+        return service.update(id, account)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    Mono<ResponseEntity<Object>> deleteById(@PathVariable Long id) {
+        return service.delete(id)
+                .then(Mono.just(ResponseEntity.noContent().build()));
     }
 }
